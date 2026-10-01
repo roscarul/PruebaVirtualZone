@@ -1,19 +1,19 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LighthouseEscape
 {
     // Placa de presión: se activa cuando el peso encima llega al umbral; se desactiva si lo quitas.
     // El jugador también cuenta: pisarla enseña que la puerta abre con peso (al irse, se apaga).
+    // Se mide por solape directo (OverlapBox), no por eventos, para que valga con el CharacterController.
     public class PressurePlate : MonoBehaviour
     {
         [SerializeField] private float requiredWeight = 20f;
         [SerializeField] private float playerWeight = 80f;
 
-        private readonly HashSet<Rigidbody> bodies = new HashSet<Rigidbody>();
+        private readonly Collider[] overlaps = new Collider[32];
+        private BoxCollider triggerBox;
         private Renderer plateRenderer;
         private Color originalColor;
-        private bool playerInside;
         private bool activated;
 
         private void Start()
@@ -21,37 +21,58 @@ namespace LighthouseEscape
             plateRenderer = GetComponent<Renderer>();
             if (plateRenderer != null)
                 originalColor = plateRenderer.material.color;
+
+            foreach (BoxCollider box in GetComponents<BoxCollider>())
+            {
+                if (box.isTrigger)
+                {
+                    triggerBox = box;
+                    break;
+                }
+            }
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void Update()
         {
-            if (other is CharacterController)
-                playerInside = true;
-            else if (other.attachedRigidbody != null)
-                bodies.Add(other.attachedRigidbody);
-            else
+            if (triggerBox == null)
                 return;
 
-            Refresh();
-        }
+            Vector3 half = Vector3.Scale(triggerBox.size * 0.5f, transform.lossyScale);
+            int count = Physics.OverlapBoxNonAlloc(transform.position, half, overlaps, transform.rotation);
 
-        private void OnTriggerExit(Collider other)
-        {
-            if (other is CharacterController)
-                playerInside = false;
-            else if (other.attachedRigidbody != null)
-                bodies.Remove(other.attachedRigidbody);
-            else
-                return;
+            float total = 0f;
+            for (int i = 0; i < count; i++)
+            {
+                Collider hit = overlaps[i];
+                if (hit.transform.IsChildOf(transform))
+                    continue;
 
-            Refresh();
-        }
+                if (hit is CharacterController)
+                {
+                    total += playerWeight;
+                    continue;
+                }
 
-        private void Refresh()
-        {
-            float total = playerInside ? playerWeight : 0f;
-            foreach (Rigidbody body in bodies)
+                Rigidbody body = hit.attachedRigidbody;
+                if (body == null)
+                    continue;
+
+                // Un mismo cuerpo con varios colisores solo cuenta una vez.
+                bool alreadyCounted = false;
+                for (int j = 0; j < i; j++)
+                {
+                    if (overlaps[j] != null && overlaps[j].attachedRigidbody == body)
+                    {
+                        alreadyCounted = true;
+                        break;
+                    }
+                }
+
+                if (alreadyCounted)
+                    continue;
+
                 total += body.mass;
+            }
 
             if (!activated && total >= requiredWeight)
                 Activate();
