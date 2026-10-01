@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace LighthouseEscape.Player
 {
-    // Interacción con E: coger/soltar, abrir la puerta e inspeccionar objetos (raycast desde la cámara).
+    // Interacción con E: coger/soltar, abrir la puerta, girar ruedas de candados e inspeccionar objetos.
     public class PlayerInteractor : MonoBehaviour
     {
         [SerializeField] private float reach = 2.6f;
@@ -21,9 +21,12 @@ namespace LighthouseEscape.Player
         private Grabbable held;
         private Grabbable aimedGrabbable;
         private ExitDoor aimedDoor;
+        private KeypadButton aimedButton;
+        private CombinationLock aimedLock;
         private Inspectable aimedInspectable;
         private string prompt = "";
         private GUIStyle promptStyle;
+        private GUIStyle captionStyle;
 
         private Inspectable inspected;
         private Transform inspectParent;
@@ -31,6 +34,7 @@ namespace LighthouseEscape.Player
         private Quaternion inspectRotation;
         private Rigidbody inspectBody;
         private bool inspectBodyWasKinematic;
+        private bool showCaption;
 
         private void Awake()
         {
@@ -76,6 +80,8 @@ namespace LighthouseEscape.Player
         private void UpdateAim()
         {
             aimedDoor = null;
+            aimedButton = null;
+            aimedLock = null;
             aimedGrabbable = null;
             aimedInspectable = null;
             prompt = "";
@@ -94,6 +100,20 @@ namespace LighthouseEscape.Player
                     prompt = "Puerta trabada";
                 else if (!aimedDoor.IsOpening)
                     prompt = "E — abrir";
+                return;
+            }
+
+            aimedButton = hit.collider.GetComponentInParent<KeypadButton>();
+            if (aimedButton != null)
+            {
+                prompt = aimedButton.Prompt();
+                return;
+            }
+
+            aimedLock = hit.collider.GetComponentInParent<CombinationLock>();
+            if (aimedLock != null)
+            {
+                prompt = aimedLock.CodeText;
                 return;
             }
 
@@ -120,6 +140,13 @@ namespace LighthouseEscape.Player
             if (aimedDoor != null)
             {
                 aimedDoor.TryOpen();
+                return;
+            }
+
+            if (aimedButton != null)
+            {
+                aimedButton.Press();
+                prompt = aimedButton.Prompt();
                 return;
             }
 
@@ -164,6 +191,7 @@ namespace LighthouseEscape.Player
         {
             inspected = target;
             inspecting = true;
+            showCaption = false;
 
             Transform t = target.transform;
             inspectParent = t.parent;
@@ -203,6 +231,9 @@ namespace LighthouseEscape.Player
             if (rend != null)
                 t.position += center - rend.bounds.center;
 
+            // La pista de texto solo aparece con la cara trasera del objeto hacia la cámara.
+            showCaption = Vector3.Dot(viewCamera.transform.forward, t.forward) > 0f;
+
             prompt = "E / Esc — salir";
 
             bool exit = (interactAction != null && interactAction.WasPressedThisFrame())
@@ -236,6 +267,7 @@ namespace LighthouseEscape.Player
             inspectBody = null;
             inspected = null;
             inspecting = false;
+            showCaption = false;
             prompt = "";
         }
 
@@ -245,6 +277,14 @@ namespace LighthouseEscape.Player
 
             if (inspected == null)
                 GUI.DrawTexture(new Rect(Screen.width * 0.5f - 2f, Screen.height * 0.5f - 2f, 4f, 4f), Texture2D.whiteTexture);
+
+            if (showCaption && inspected != null && !string.IsNullOrEmpty(inspected.Caption))
+            {
+                if (captionStyle == null)
+                    captionStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontSize = 16 };
+
+                GUI.Label(new Rect(0f, Screen.height * 0.55f, Screen.width, 28f), inspected.Caption, captionStyle);
+            }
 
             if (string.IsNullOrEmpty(prompt))
                 return;

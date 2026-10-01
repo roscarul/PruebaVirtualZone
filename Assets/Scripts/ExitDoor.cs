@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LighthouseEscape
 {
     // Puerta de salida: trabada hasta que la placa se activa; con E gira sobre su bisagra.
-    public class ExitDoor : MonoBehaviour
+    public class ExitDoor : MonoBehaviour, IUnlockable
     {
         [SerializeField] private bool hingeOnLeft = true;
         [SerializeField] private float openAngle = 105f;
