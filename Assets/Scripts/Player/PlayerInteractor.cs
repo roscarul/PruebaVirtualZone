@@ -3,20 +3,34 @@ using UnityEngine.InputSystem;
 
 namespace LighthouseEscape.Player
 {
-    // Interacción con E: coger/soltar objetos y abrir la puerta (raycast desde la cámara).
+    // Interacción con E: coger/soltar, abrir la puerta e inspeccionar objetos (raycast desde la cámara).
     public class PlayerInteractor : MonoBehaviour
     {
         [SerializeField] private float reach = 2.6f;
         [SerializeField] private float holdDistance = 1.4f;
         public InputActionAsset actionsAsset;
 
+        // true mientras dura una inspección; PlayerController lo usa para congelar al jugador.
+        public static bool IsInspecting => inspecting;
+
+        private static bool inspecting;
+
         private InputAction interactAction;
+        private InputAction cancelAction;
         private Camera viewCamera;
         private Grabbable held;
         private Grabbable aimedGrabbable;
         private ExitDoor aimedDoor;
+        private Inspectable aimedInspectable;
         private string prompt = "";
         private GUIStyle promptStyle;
+
+        private Inspectable inspected;
+        private Transform inspectParent;
+        private Vector3 inspectPosition;
+        private Quaternion inspectRotation;
+        private Rigidbody inspectBody;
+        private bool inspectBodyWasKinematic;
 
         private void Awake()
         {
@@ -25,6 +39,7 @@ namespace LighthouseEscape.Player
             if (actionsAsset != null)
             {
                 interactAction = actionsAsset.FindAction("Interact");
+                cancelAction = actionsAsset.FindAction("Cancel");
                 actionsAsset.Enable();
             }
         }
@@ -37,6 +52,12 @@ namespace LighthouseEscape.Player
 
         private void Update()
         {
+            if (inspected != null)
+            {
+                UpdateInspect();
+                return;
+            }
+
             if (held != null)
             {
                 held.transform.localPosition = new Vector3(0f, -0.25f, holdDistance);
@@ -56,6 +77,7 @@ namespace LighthouseEscape.Player
         {
             aimedDoor = null;
             aimedGrabbable = null;
+            aimedInspectable = null;
             prompt = "";
 
             if (viewCamera == null)
@@ -77,7 +99,14 @@ namespace LighthouseEscape.Player
 
             aimedGrabbable = hit.collider.GetComponentInParent<Grabbable>();
             if (aimedGrabbable != null)
+            {
                 prompt = "E — coger";
+                return;
+            }
+
+            aimedInspectable = hit.collider.GetComponentInParent<Inspectable>();
+            if (aimedInspectable != null)
+                prompt = "E — inspeccionar";
         }
 
         private void Press()
@@ -95,7 +124,13 @@ namespace LighthouseEscape.Player
             }
 
             if (aimedGrabbable != null)
+            {
                 Grab(aimedGrabbable);
+                return;
+            }
+
+            if (aimedInspectable != null)
+                EnterInspect(aimedInspectable);
         }
 
         private void Grab(Grabbable target)
@@ -123,10 +158,93 @@ namespace LighthouseEscape.Player
             held = null;
         }
 
+        // ---- Modo inspección: el objeto se centra frente a la cámara y se rota con el ratón. ----
+
+        private void EnterInspect(Inspectable target)
+        {
+            inspected = target;
+            inspecting = true;
+
+            Transform t = target.transform;
+            inspectParent = t.parent;
+            inspectPosition = t.position;
+            inspectRotation = t.rotation;
+
+            inspectBody = target.GetComponent<Rigidbody>();
+            if (inspectBody != null)
+            {
+                inspectBodyWasKinematic = inspectBody.isKinematic;
+                inspectBody.isKinematic = true;
+            }
+
+            t.SetParent(viewCamera.transform, true);
+            t.localPosition = Vector3.forward * target.FocusDistance;
+
+            // Su cara +Z hacia la cámara: al entrar se ve el frente, no la parte de detrás.
+            t.localRotation = Quaternion.Euler(0f, 180f, 0f);
+
+            // Centra el objeto por su renderer, no por su pivote.
+            Renderer rend = target.CachedRenderer;
+            if (rend != null)
+                t.position += FocusPoint() - rend.bounds.center;
+        }
+
+        private void UpdateInspect()
+        {
+            Transform t = inspected.transform;
+            Vector3 center = FocusPoint();
+
+            Vector2 look = Mouse.current != null ? Mouse.current.delta.ReadValue() : Vector2.zero;
+            t.RotateAround(center, viewCamera.transform.up, -look.x * inspected.RotationSpeed);
+            t.RotateAround(center, viewCamera.transform.right, -look.y * inspected.RotationSpeed);
+
+            // Si la cámara se movió (gravedad), vuelve a centrarlo en pantalla.
+            Renderer rend = inspected.CachedRenderer;
+            if (rend != null)
+                t.position += center - rend.bounds.center;
+
+            prompt = "E / Esc — salir";
+
+            bool exit = (interactAction != null && interactAction.WasPressedThisFrame())
+                        || (cancelAction != null && cancelAction.WasPressedThisFrame());
+            if (exit)
+                ExitInspect();
+        }
+
+        private Vector3 FocusPoint()
+        {
+            return viewCamera.transform.TransformPoint(Vector3.forward * inspected.FocusDistance);
+        }
+
+        private void ExitInspect()
+        {
+            Transform t = inspected.transform;
+
+            t.SetParent(inspectParent, true);
+            t.SetPositionAndRotation(inspectPosition, inspectRotation);
+
+            if (inspectBody != null)
+            {
+                inspectBody.isKinematic = inspectBodyWasKinematic;
+                if (!inspectBodyWasKinematic)
+                {
+                    inspectBody.linearVelocity = Vector3.zero;
+                    inspectBody.angularVelocity = Vector3.zero;
+                }
+            }
+
+            inspectBody = null;
+            inspected = null;
+            inspecting = false;
+            prompt = "";
+        }
+
         private void OnGUI()
         {
             GUI.color = Color.white;
-            GUI.DrawTexture(new Rect(Screen.width * 0.5f - 2f, Screen.height * 0.5f - 2f, 4f, 4f), Texture2D.whiteTexture);
+
+            if (inspected == null)
+                GUI.DrawTexture(new Rect(Screen.width * 0.5f - 2f, Screen.height * 0.5f - 2f, 4f, 4f), Texture2D.whiteTexture);
 
             if (string.IsNullOrEmpty(prompt))
                 return;
