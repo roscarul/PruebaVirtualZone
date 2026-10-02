@@ -9,6 +9,7 @@ namespace LighthouseEscape
     {
         [SerializeField] private float requiredWeight = 20f;
         [SerializeField] private float playerWeight = 80f;
+        [SerializeField] private MonoBehaviour[] unlockTargets;
 
         private readonly Collider[] overlaps = new Collider[32];
         private BoxCollider triggerBox;
@@ -87,9 +88,7 @@ namespace LighthouseEscape
             if (plateRenderer != null)
                 plateRenderer.material.color = new Color(0.45f, 1f, 0.5f);
 
-            ExitDoor door = FindAnyObjectByType<ExitDoor>();
-            if (door != null)
-                door.Unlock();
+            Notify(true);
         }
 
         private void Deactivate()
@@ -99,9 +98,33 @@ namespace LighthouseEscape
             if (plateRenderer != null)
                 plateRenderer.material.color = originalColor;
 
+            Notify(false);
+        }
+
+        // Si la escena tiene targets, se avisa por contrato (compuertas, candados...).
+        // Sin targets, se mantiene el comportamiento viejo: abrir la puerta directamente.
+        private void Notify(bool unlock)
+        {
+            if (unlockTargets != null && unlockTargets.Length > 0)
+            {
+                foreach (MonoBehaviour target in unlockTargets)
+                {
+                    if (target is IUnlockable unlockable)
+                    {
+                        if (unlock) unlockable.Unlock();
+                        else unlockable.Lock();
+                    }
+                }
+
+                return;
+            }
+
             ExitDoor door = FindAnyObjectByType<ExitDoor>();
-            if (door != null)
-                door.Lock();
+            if (door == null)
+                return;
+
+            if (unlock) door.Unlock();
+            else door.Lock();
         }
     }
 }

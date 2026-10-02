@@ -8,6 +8,8 @@ namespace LighthouseEscape
         [SerializeField] private bool hingeOnLeft = true;
         [SerializeField] private float openAngle = 105f;
         [SerializeField] private float openSpeed = 100f;
+        // Luz propia de esta puerta; si no se asigna, se usa la LuzPuerta global (escenas antiguas).
+        [SerializeField] private Light customLight;
 
         private Light doorLight;
         private float appliedAngle;
@@ -19,9 +21,16 @@ namespace LighthouseEscape
 
         private void Start()
         {
-            GameObject lightGo = GameObject.Find("LuzPuerta");
-            if (lightGo != null)
-                doorLight = lightGo.GetComponent<Light>();
+            if (customLight != null)
+            {
+                doorLight = customLight;
+            }
+            else
+            {
+                GameObject lightGo = GameObject.Find("LuzPuerta");
+                if (lightGo != null)
+                    doorLight = lightGo.GetComponent<Light>();
+            }
 
             // Naranja mientras la puerta está trabada.
             if (doorLight != null)
