@@ -72,7 +72,7 @@ namespace LighthouseEscape.Player
                 held.transform.rotation = Quaternion.identity;
 
                 bool holdingKey = held.GetComponent<Key>() != null;
-                if (holdingKey && aimedDoor != null && !aimedDoor.Unlocked)
+                if (holdingKey && aimedDoor != null && aimedDoor.RequiresKey && !aimedDoor.Unlocked)
                     prompt = "E — usar llave";
                 else
                     prompt = "E — soltar";
@@ -155,7 +155,7 @@ namespace LighthouseEscape.Player
         {
             if (held != null)
             {
-                if (held.GetComponent<Key>() != null && aimedDoor != null && !aimedDoor.Unlocked)
+                if (held.GetComponent<Key>() != null && aimedDoor != null && aimedDoor.RequiresKey && !aimedDoor.Unlocked)
                 {
                     aimedDoor.Unlock();
                     aimedDoor.TryOpen();

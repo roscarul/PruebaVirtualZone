@@ -10,14 +10,22 @@ namespace LighthouseEscape
         [SerializeField] private float openSpeed = 100f;
         // Luz propia de esta puerta; si no se asigna, se usa la LuzPuerta global (escenas antiguas).
         [SerializeField] private Light customLight;
+        // true = para abrirla hace falta la llave; la primera puerta va sin llave (solo la placa).
+        [SerializeField] private bool requiresKey = true;
+        // true = se abre/cierra sola con la placa (como la bandeja de la caja); false = con E.
+        [SerializeField] private bool autoOpen;
 
         private Light doorLight;
         private float appliedAngle;
+        private float targetAngle;
         private float direction = -1f;
         private Vector3 hingePoint;
+        private Vector3 closedPos;
+        private Quaternion closedRot;
 
         public bool Unlocked { get; private set; }
         public bool IsOpening => appliedAngle > 0f;
+        public bool RequiresKey => requiresKey;
 
         private void Start()
         {
@@ -44,6 +52,8 @@ namespace LighthouseEscape
 
             Vector3 side = transform.right * (hingeOnLeft ? -1f : 1f);
             hingePoint = transform.position + side * halfWidth;
+            closedPos = transform.position;
+            closedRot = transform.rotation;
         }
 
         public void Unlock()
@@ -56,37 +66,72 @@ namespace LighthouseEscape
             // Verde: desbloqueada.
             if (doorLight != null)
                 doorLight.color = new Color(0.45f, 1f, 0.5f);
+
+            if (autoOpen)
+                StartMoving(openAngle);
         }
 
-        // Vuelve a trabar si quitan los barriles de la placa (si la puerta ya se está abriendo, se queda abierta).
+        // Vuelve a trabar si quitan los barriles de la placa. Las puertas auto (placa) se cierran solas.
         public void Lock()
         {
-            if (!Unlocked || IsOpening)
+            if (!Unlocked)
+                return;
+
+            if (!autoOpen && IsOpening)
                 return;
 
             Unlocked = false;
 
             if (doorLight != null)
                 doorLight.color = new Color(1f, 0.55f, 0.35f);
+
+            if (autoOpen)
+                targetAngle = 0f;
         }
 
         public void TryOpen()
         {
-            if (!Unlocked || IsOpening)
+            if (autoOpen || !Unlocked || IsOpening)
                 return;
 
+            StartMoving(openAngle);
+        }
+
+        private void StartMoving(float angle)
+        {
             direction = hingeOnLeft ? -1f : 1f;
-            appliedAngle = 0.001f;
+            targetAngle = angle;
+            if (appliedAngle <= 0f)
+                appliedAngle = 0.001f;
         }
 
         private void Update()
         {
-            if (appliedAngle <= 0f || appliedAngle >= openAngle)
+            if (Mathf.Approximately(appliedAngle, targetAngle))
+            {
+                // Cierre exacto en la posicion inicial (evita deriva del RotateAround).
+                if (targetAngle <= 0f && appliedAngle != 0f)
+                {
+                    transform.SetPositionAndRotation(closedPos, closedRot);
+                    appliedAngle = 0f;
+                }
                 return;
+            }
 
-            float step = Mathf.Min(openSpeed * Time.deltaTime, openAngle - appliedAngle);
-            transform.RotateAround(hingePoint, Vector3.up, direction * step);
-            appliedAngle += step;
+            float step = openSpeed * Time.deltaTime;
+            float next = appliedAngle < targetAngle
+                ? Mathf.Min(appliedAngle + step, targetAngle)
+                : Mathf.Max(appliedAngle - step, targetAngle);
+            float delta = next - appliedAngle;
+            if (delta != 0f)
+                transform.RotateAround(hingePoint, Vector3.up, direction * delta);
+            appliedAngle = next;
+
+            if (appliedAngle <= 0f && targetAngle <= 0f)
+            {
+                transform.SetPositionAndRotation(closedPos, closedRot);
+                appliedAngle = 0f;
+            }
         }
     }
 }
