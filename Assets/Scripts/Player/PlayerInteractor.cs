@@ -23,6 +23,7 @@ namespace LighthouseEscape.Player
         private ExitDoor aimedDoor;
         private KeypadButton aimedButton;
         private CombinationLock aimedLock;
+        private Mirror aimedMirror;
         private Inspectable aimedInspectable;
         private string prompt = "";
         private GUIStyle promptStyle;
@@ -82,6 +83,7 @@ namespace LighthouseEscape.Player
             aimedDoor = null;
             aimedButton = null;
             aimedLock = null;
+            aimedMirror = null;
             aimedGrabbable = null;
             aimedInspectable = null;
             prompt = "";
@@ -114,6 +116,13 @@ namespace LighthouseEscape.Player
             if (aimedLock != null)
             {
                 prompt = aimedLock.CodeText;
+                return;
+            }
+
+            aimedMirror = hit.collider.GetComponentInParent<Mirror>();
+            if (aimedMirror != null)
+            {
+                prompt = "E — girar espejo";
                 return;
             }
 
@@ -150,6 +159,12 @@ namespace LighthouseEscape.Player
                 return;
             }
 
+            if (aimedMirror != null)
+            {
+                aimedMirror.Rotate();
+                return;
+            }
+
             if (aimedGrabbable != null)
             {
                 Grab(aimedGrabbable);
@@ -179,10 +194,61 @@ namespace LighthouseEscape.Player
             held.transform.SetParent(null, true);
             held.transform.rotation = Quaternion.identity;
 
+            // Si hay pared (o suelo) por delante, se retira hasta quedar justo fuera de la
+            // superficie: antes el objeto aparecía dentro de la pared y physics lo expulsaba.
+            Vector3 camPos = viewCamera.transform.position;
+            Vector3 dropPos = held.transform.position;
+            Vector3 dir = (dropPos - camPos).normalized;
+            float dist = (dropPos - camPos).magnitude;
+
+            Collider[] heldColliders = held.GetComponentsInChildren<Collider>();
+            foreach (Collider col in heldColliders)
+                col.enabled = false;
+
+            RaycastHit[] hits = Physics.RaycastAll(new Ray(camPos, dir), dist + 2f, ~0, QueryTriggerInteraction.Ignore);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+            Renderer heldRenderer = held.GetComponentInChildren<Renderer>();
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.transform.root == transform.root || hit.transform.IsChildOf(held.transform))
+                    continue;
+
+                dropPos = PullOutOfSurface(hit.point, dir, dropPos, heldRenderer);
+                break;
+            }
+
+            foreach (Collider col in heldColliders)
+                col.enabled = true;
+
+            // Que no acabe dentro de la propia cámara.
+            if (Vector3.Dot(dropPos - camPos, dir) < 0.25f)
+                dropPos = camPos + dir * 0.25f;
+
+            held.transform.position = dropPos;
+
             if (body != null)
+            {
                 body.isKinematic = false;
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+            }
 
             held = null;
+        }
+
+        // Mueve el objeto por -dir hasta que sus bounds queden tocando la superficie golpeada,
+        // sin penetrarla.
+        private static Vector3 PullOutOfSurface(Vector3 hitPoint, Vector3 dir, Vector3 pos, Renderer rend)
+        {
+            if (rend == null)
+                return hitPoint - dir * 0.3f;
+
+            Bounds b = rend.bounds;
+            Vector3 e = b.extents;
+            float support = Mathf.Abs(dir.x) * e.x + Mathf.Abs(dir.y) * e.y + Mathf.Abs(dir.z) * e.z;
+            float pull = Vector3.Dot(b.center - hitPoint, dir) + support;
+            return pull > 0f ? pos - dir * pull : pos;
         }
 
         // ---- Modo inspección: el objeto se centra frente a la cámara y se rota con el ratón. ----
