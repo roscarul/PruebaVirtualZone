@@ -21,6 +21,7 @@ namespace LighthouseEscape.Player
         private Grabbable held;
         private Grabbable aimedGrabbable;
         private ExitDoor aimedDoor;
+        private SafeDoor aimedSafe;
         private KeypadButton aimedButton;
         private CombinationLock aimedLock;
         private Mirror aimedMirror;
@@ -63,15 +64,18 @@ namespace LighthouseEscape.Player
                 return;
             }
 
+            UpdateAim();
+
             if (held != null)
             {
                 held.transform.localPosition = new Vector3(0f, -0.25f, holdDistance);
                 held.transform.rotation = Quaternion.identity;
-                prompt = "E — soltar";
-            }
-            else
-            {
-                UpdateAim();
+
+                bool holdingKey = held.GetComponent<Key>() != null;
+                if (holdingKey && aimedDoor != null && !aimedDoor.Unlocked)
+                    prompt = "E — usar llave";
+                else
+                    prompt = "E — soltar";
             }
 
             if (interactAction != null && interactAction.WasPressedThisFrame())
@@ -81,6 +85,7 @@ namespace LighthouseEscape.Player
         private void UpdateAim()
         {
             aimedDoor = null;
+            aimedSafe = null;
             aimedButton = null;
             aimedLock = null;
             aimedMirror = null;
@@ -102,6 +107,14 @@ namespace LighthouseEscape.Player
                     prompt = "Puerta trabada";
                 else if (!aimedDoor.IsOpening)
                     prompt = "E — abrir";
+                return;
+            }
+
+            aimedSafe = hit.collider.GetComponentInParent<SafeDoor>();
+            if (aimedSafe != null)
+            {
+                if (!aimedSafe.Unlocked)
+                    prompt = "Cerrada";
                 return;
             }
 
@@ -142,6 +155,17 @@ namespace LighthouseEscape.Player
         {
             if (held != null)
             {
+                if (held.GetComponent<Key>() != null && aimedDoor != null && !aimedDoor.Unlocked)
+                {
+                    aimedDoor.Unlock();
+                    aimedDoor.TryOpen();
+                    Grabbable used = held;
+                    held = null;
+                    prompt = "";
+                    Destroy(used.gameObject);
+                    return;
+                }
+
                 Drop();
                 return;
             }
@@ -149,6 +173,12 @@ namespace LighthouseEscape.Player
             if (aimedDoor != null)
             {
                 aimedDoor.TryOpen();
+                return;
+            }
+
+            if (aimedSafe != null)
+            {
+                aimedSafe.TryOpen();
                 return;
             }
 
@@ -182,6 +212,10 @@ namespace LighthouseEscape.Player
             Rigidbody body = target.GetComponent<Rigidbody>();
             if (body != null)
                 body.isKinematic = true;
+
+            // Sin colisores mientras se sostiene: si no, el propio objeto tapa el rayo de apuntado.
+            foreach (Collider col in target.GetComponentsInChildren<Collider>())
+                col.enabled = false;
 
             target.transform.SetParent(viewCamera.transform, false);
             target.transform.localPosition = new Vector3(0f, -0.25f, holdDistance);
