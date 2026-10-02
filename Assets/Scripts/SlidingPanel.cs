@@ -7,6 +7,7 @@ namespace LighthouseEscape
     {
         [SerializeField] private float slideDistance = 1.85f;
         [SerializeField] private float slideSpeed = 1.4f;
+        [SerializeField] private Vector3 slideDirection = Vector3.up;
 
         private Vector3 closedPos;
         private float amount;
@@ -36,7 +37,7 @@ namespace LighthouseEscape
                 return;
 
             amount = Mathf.MoveTowards(amount, target, slideSpeed * Time.deltaTime);
-            transform.position = closedPos + Vector3.up * amount;
+            transform.position = closedPos + slideDirection.normalized * amount;
         }
     }
 }
