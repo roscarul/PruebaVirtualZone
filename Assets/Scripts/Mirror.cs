@@ -7,9 +7,12 @@ namespace LighthouseEscape
     {
         private const float StepAngle = 45f;
 
+        [SerializeField] private AudioClip soundRotate;
+
         public void Rotate()
         {
             transform.Rotate(0f, StepAngle, 0f, Space.Self);
+            GameFeedback.Play(soundRotate);
         }
     }
 }

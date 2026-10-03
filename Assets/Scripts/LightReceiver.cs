@@ -2,13 +2,17 @@ using UnityEngine;
 
 namespace LighthouseEscape
 {
-    // Receptor del haz: encendido se desbloquea , si el haz se corta se apaga.
+    // Receptor del haz: en reposo brilla en rojo; cuando llega el haz pasa a
+    // verde, reproduce su sonido y desbloquea sus objetivos. Si el haz se
+    // corta, vuelve a rojo y los vuelve a bloquear.
     public class LightReceiver : MonoBehaviour
     {
         [SerializeField] private MonoBehaviour[] unlockTargets;
+        [SerializeField] private AudioClip soundPowered;
+        [SerializeField] private Color unpoweredColor = new Color(0.85f, 0.1f, 0.08f, 0.35f);
+        [SerializeField] private Color poweredColor = new Color(0.45f, 1f, 0.5f, 1f);
 
         private Material receiverMaterial;
-        private Color idleColor;
         private bool powered;
 
         private void Awake()
@@ -16,10 +20,9 @@ namespace LighthouseEscape
             Renderer receiverRenderer = GetComponent<Renderer>();
 
             if (receiverRenderer != null)
-            {
                 receiverMaterial = receiverRenderer.material;
-                idleColor = receiverMaterial.color;
-            }
+
+            ApplyVisual();
         }
 
         public void SetPowered(bool on)
@@ -28,14 +31,17 @@ namespace LighthouseEscape
                 return;
 
             powered = on;
-
-            if (receiverMaterial != null)
-                receiverMaterial.color = on ? new Color(0.45f, 1f, 0.5f) : idleColor;
+            ApplyVisual();
 
             if (on)
+            {
+                GameFeedback.Play(soundPowered);
                 Debug.Log("[Puzzle] Haz conectado");
+            }
             else
+            {
                 Debug.Log("[Puzzle] Haz cortado");
+            }
 
             if (unlockTargets == null)
                 return;
@@ -50,6 +56,17 @@ namespace LighthouseEscape
                 else
                     unlockable.Lock();
             }
+        }
+
+        private void ApplyVisual()
+        {
+            if (receiverMaterial == null)
+                return;
+
+            Color color = powered ? poweredColor : unpoweredColor;
+            receiverMaterial.color = color;
+            receiverMaterial.SetColor("_EmissionColor", color * 2f);
+            receiverMaterial.EnableKeyword("_EMISSION");
         }
     }
 }

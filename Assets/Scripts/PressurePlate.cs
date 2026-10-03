@@ -10,6 +10,7 @@ namespace LighthouseEscape
         [SerializeField] private float requiredWeight = 20f;
         [SerializeField] private float playerWeight = 80f;
         [SerializeField] private MonoBehaviour[] unlockTargets;
+        [SerializeField] private AudioClip soundDrop;
 
         private readonly Collider[] overlaps = new Collider[32];
         private BoxCollider triggerBox;
@@ -88,6 +89,7 @@ namespace LighthouseEscape
             if (plateRenderer != null)
                 plateRenderer.material.color = new Color(0.45f, 1f, 0.5f);
 
+            GameFeedback.Play(soundDrop);
             Notify(true);
         }
 

@@ -14,6 +14,8 @@ namespace LighthouseEscape
         [SerializeField] private bool requiresKey = true;
         // true = se abre/cierra sola con la placa (como la bandeja de la caja); false = con E.
         [SerializeField] private bool autoOpen;
+        // Sonido al desbloquear con E (las puertas auto ya se anuncian con su luz).
+        [SerializeField] private AudioClip soundUnlock;
 
         private Light doorLight;
         private float appliedAngle;
@@ -68,7 +70,13 @@ namespace LighthouseEscape
                 doorLight.color = new Color(0.45f, 1f, 0.5f);
 
             if (autoOpen)
+            {
                 StartMoving(openAngle);
+            }
+            else
+            {
+                GameFeedback.Play(soundUnlock);
+            }
         }
 
         // Vuelve a trabar si quitan los barriles de la placa. Las puertas auto (placa) se cierran solas.

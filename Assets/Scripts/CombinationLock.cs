@@ -10,6 +10,9 @@ namespace LighthouseEscape
     {
         [SerializeField] private int[] targetCode = { 3, 1, 4 };
         [SerializeField] private MonoBehaviour[] unlockTargets;
+        [SerializeField] private AudioClip soundPress;
+        [SerializeField] private AudioClip soundSuccess;
+        [SerializeField] private AudioClip soundFail;
 
         private readonly List<int> entry = new List<int>();
         private Renderer boxRenderer;
@@ -49,12 +52,16 @@ namespace LighthouseEscape
                 return;
 
             entry.Add(digit);
+            GameFeedback.Play(soundPress);
         }
 
         public void Clear()
         {
-            if (!Solved)
-                entry.Clear();
+            if (Solved)
+                return;
+
+            entry.Clear();
+            GameFeedback.Play(soundPress);
         }
 
         public void Confirm()
@@ -80,7 +87,10 @@ namespace LighthouseEscape
             if (correct)
                 Solve();
             else
+            {
                 Debug.Log("[Puzzle] Código incorrecto");
+                GameFeedback.Play(soundFail);
+            }
         }
 
         private void Solve()
@@ -88,6 +98,7 @@ namespace LighthouseEscape
             Solved = true;
 
             Debug.Log("[Puzzle] Candado numérico abierto: " + Join(targetCode));
+            GameFeedback.Play(soundSuccess);
 
             if (boxRenderer != null)
                 boxRenderer.material.color = new Color(0.45f, 1f, 0.5f);
