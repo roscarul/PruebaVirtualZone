@@ -378,7 +378,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9b842e47f40fe274bb299c07089f16d6, type: 2}
+  - {fileID: 2100000, guid: e3d901c671434e45994bdf010b134710, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3514,7 +3514,8 @@ SkinnedMeshRenderer:
   m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials: []
+  m_Materials:
+  - {fileID: 2100000, guid: 4b609c54d0b14db4f99b6a84082e4d8e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4148,7 +4149,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d83bc2cd356bff45a68e334fe0b5a2d, type: 2}
+  - {fileID: 2100000, guid: f9ac878fbfe34cf3beff1244da574a54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4204,6 +4205,45 @@ Transform:
   - {fileID: 988917602}
   m_Father: {fileID: 1714430051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1633048064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900000469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a95e70d81b4f36a05e9c73b18d6f42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseEscape.Grabbable
+--- !u!54 &1633048065
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900000469}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1714430050
 GameObject:
   m_ObjectHideFlags: 0
@@ -4912,7 +4952,7 @@ Transform:
   m_GameObject: {fileID: 1900000028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.25, y: 1.324, z: 0.22}
+  m_LocalPosition: {x: -5.25, y: 1.324, z: 0.0051}
   m_LocalScale: {x: 0.02, y: 0.05, z: 0.12}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4951,7 +4991,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cd5773376bdf143499ace345350f3419, type: 2}
+  - {fileID: 2100000, guid: 81e2dab921abde84f9c12b288685a1c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5120,7 +5160,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d83bc2cd356bff45a68e334fe0b5a2d, type: 2}
+  - {fileID: 2100000, guid: f9ac878fbfe34cf3beff1244da574a54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5246,7 +5286,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d83bc2cd356bff45a68e334fe0b5a2d, type: 2}
+  - {fileID: 2100000, guid: f9ac878fbfe34cf3beff1244da574a54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5466,7 +5506,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d83bc2cd356bff45a68e334fe0b5a2d, type: 2}
+  - {fileID: 2100000, guid: f9ac878fbfe34cf3beff1244da574a54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10668,7 +10708,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9b842e47f40fe274bb299c07089f16d6, type: 2}
+  - {fileID: 2100000, guid: e3d901c671434e45994bdf010b134710, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10959,7 +10999,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9b842e47f40fe274bb299c07089f16d6, type: 2}
+  - {fileID: 2100000, guid: e3d901c671434e45994bdf010b134710, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11297,7 +11337,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9b842e47f40fe274bb299c07089f16d6, type: 2}
+  - {fileID: 2100000, guid: e3d901c671434e45994bdf010b134710, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11505,6 +11545,8 @@ GameObject:
   - component: {fileID: 1900000471}
   - component: {fileID: 1900000472}
   - component: {fileID: 1900000473}
+  - component: {fileID: 1633048065}
+  - component: {fileID: 1633048064}
   m_Layer: 0
   m_Name: CajaRota1
   m_TagString: Untagged
@@ -11560,7 +11602,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9b842e47f40fe274bb299c07089f16d6, type: 2}
+  - {fileID: 2100000, guid: e3d901c671434e45994bdf010b134710, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11635,7 +11677,7 @@ Transform:
   m_GameObject: {fileID: 1900000474}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.9, y: 0.5, z: -15.6}
+  m_LocalPosition: {x: -2.818, y: 0.5, z: -15.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11674,7 +11716,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9b842e47f40fe274bb299c07089f16d6, type: 2}
+  - {fileID: 2100000, guid: e3d901c671434e45994bdf010b134710, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11785,13 +11827,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1900000481}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.7, y: 0.8, z: -14.7}
+  m_LocalRotation: {x: -0, y: -0, z: 0.17606154, w: 0.9843792}
+  m_LocalPosition: {x: -3.779, y: 0.771, z: -14.7}
   m_LocalScale: {x: 0.2, y: 1.6, z: 2.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2094813267}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 20.281}
 --- !u!33 &1900000483
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -13665,6 +13707,73 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &8800000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8800000002}
+  - component: {fileID: 8800000003}
+  - component: {fileID: 8800000004}
+  m_Layer: 0
+  m_Name: FinalAvaricia
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8800000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.6630229, z: 0, w: 0.7485991}
+  m_LocalPosition: {x: 7.254324, y: 1.2, z: -11.582778}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -83.06166, z: 0}
+--- !u!65 &8800000003
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800000001}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4, y: 2.4, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8800000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04104cf604af25041b8e0d95a11beb0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LighthouseEscape.LevelFinish
+  soundComplete: {fileID: 8300000, guid: 733ccc3be99947043bb889d1dc77ae53, type: 3}
 --- !u!1001 &990000000000000408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14805,73 +14914,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aaea6e5f55c4ac14cba566e6cd9fea1c, type: 3}
---- !u!1 &8800000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8800000002}
-  - component: {fileID: 8800000003}
-  - component: {fileID: 8800000004}
-  m_Layer: 0
-  m_Name: FinalAvaricia
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8800000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8800000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.6630229, z: 0, w: 0.7485991}
-  m_LocalPosition: {x: 7.254324, y: 1.2, z: -11.582778}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -83.06166, z: 0}
---- !u!65 &8800000003
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8800000001}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.4, y: 2.4, z: 0.5}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8800000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8800000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04104cf604af25041b8e0d95a11beb0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LighthouseEscape.LevelFinish
-  soundComplete: {fileID: 8300000, guid: 733ccc3be99947043bb889d1dc77ae53, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
