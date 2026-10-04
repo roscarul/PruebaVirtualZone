@@ -8,6 +8,13 @@ namespace LighthouseEscape
     {
         [SerializeField] private AudioClip soundButton;
 
+        private void Awake()
+        {
+            // El nivel deja el cursor bloqueado: se libera para poder pulsar los botones.
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         public void GoToMenu()
         {
             GameFeedback.Play(soundButton);

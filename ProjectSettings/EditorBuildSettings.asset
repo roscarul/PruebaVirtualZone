@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 8b4747bf178033e44b42c9856bef2733
+  - enabled: 1
     path: Assets/Scenes/EscapeRoomNivel.unity
     guid: 8d3fc7368bf5421581d21564a2aec88f
+  - enabled: 1
+    path: Assets/Scenes/Completado.unity
+    guid: 6f2d9c41b8a34e0795c2e1d4a7b8f3e5
   - enabled: 0
     path: Assets/Scenes/EscapeRoom.unity
     guid: e75d4b3cf445cb442acd6d7fda4d190c
