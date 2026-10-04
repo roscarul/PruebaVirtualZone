@@ -4,15 +4,8 @@ Escape room en primera persona ambientado en el faro de Finisterre, desarrollado
 
 ## Cómo ejecutar
 
-Las escenas ya están configuradas en **File → Build Settings** en este orden:
-
-| # | Escena | Estado |
-|---|---|---|
-| 0 | `Menu.unity` | Habilitada — menú principal |
-| 1 | `EscapeRoomNivel.unity` | Habilitada — nivel principal |
-| 2 | `Completado.unity` | Habilitada — pantalla de final |
-| — | `EscapeRoom.unity` | Deshabilitada — prototipo anterior (sala única) |
-| — | `SampleScene.unity` | Escena vacía de plantilla, fuera del build |
+Descargar el proyecto buildeado desde: https://drive.google.com/drive/folders/1c-50cV3xs8xoO0x2D1ClMbfwGk_TLIzT?usp=sharing
+Extraer el .zip, abrir el proyecto y pulsar al ejecutable llamado "PruebaVirtualZone"
 
 ---
 
@@ -48,6 +41,7 @@ Nuestro personaje se adentra en el faro de Finisterre para buscar la clave de la
 - **Puzzle de haz** (`LightEmitter`, `Mirror`, `LightReceiver`, `ConditionGate`) — el emisor lanza un haz que rebota en los espejos (giran 45° con `E`); paredes, el jugador u objetos lo cortan y se recalcula cada frame. Los receptores pasan de rojo a verde al recibir el haz y desbloquean sus objetivos; la compuerta AND solo actúa cuando hay varias fuentes activas a la vez.
 - **Final** (`LevelFinish` + `PantallaCompletado`) — trigger tras la salida del faro; carga la pantalla final y libera el ratón para los botones.
 
+Por si algo no queda claro para poder completar la demo y ver todo lo que ofrece, se deja una guía en vídeo en el siguiente enlace: https://youtu.be/G0-F-Xw_P0o
 ---
 
 ## Flujo
