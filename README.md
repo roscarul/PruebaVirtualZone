@@ -179,3 +179,9 @@ La IA es parte de mi flujo de trabajo, pero siempre por detrás de mis decisione
 ## Sobre los assets de terceros
 
 Todos los assets de terceros utilizados en el proyecto son de licencia CC0.
+
+---
+
+## House of puzzles
+
+Por la naturaleza de la prueba adjunto también el repositorio de otro proyecto, "House of puzzles" el cual es un pequeño proyecto de estilo "Escape Room" desarrollado para realidad virtual con Unreal Engine: https://github.com/roscarul/HouseOfPuzzles
