@@ -4,11 +4,6 @@ Escape room en primera persona ambientado en el faro de Finisterre, desarrollado
 
 ## Cómo ejecutar
 
-1. Abrir **Unity Hub → Open →** seleccionar la raíz de este repositorio.
-2. Dejar que Unity importe los assets (primera vez: varios minutos).
-3. Abrir `Assets/Scenes/Menu.unity`.
-4. Pulsar **Play**.
-
 Las escenas ya están configuradas en **File → Build Settings** en este orden:
 
 | # | Escena | Estado |
@@ -38,11 +33,7 @@ La interacción funciona por raycast a 2,6 m: un texto de aviso en pantalla indi
 
 ## Argumento
 
-> *Se dice que la clave de la inmortalidad... fue escondida en el faro Finisterre. Muchos se han atrevido a buscarla. Pero pocos han regresado...*
-
-Estas frases se muestran en la intro cinemática (Timeline) antes de tomar el control. A partir de ahí, toca explorar el faro y decidir cómo salir.
-
-> **Spoiler del final:** al completar el puzzle de luz se abre la puerta del faro; atravesarla activa el trigger `LevelFinish` y lleva a la pantalla `Completado` — *"Tu avaricia te llevó a una muerte segura."* — con las opciones **Repetir** y **Volver al menú**.
+Nuestro personaje se adentra en el faro de Finisterre para buscar la clave de la inmortalidad.
 
 ---
 
@@ -163,6 +154,15 @@ Todos los scripts viven en `Assets/Scripts/` (namespace `LighthouseEscape`).
 
 ---
 
+## Trabajo con IA
+
+La IA es parte de mi flujo de trabajo, pero siempre por detrás de mis decisiones y no en su lugar:
+
+- **Bases de código.** Primero diseño la solución (qué scripts hacen falta, sus responsabilidades, contratos y flujo); a partir de ese diseño pido a la IA la base del código, que después reviso, ajusto e integro yo mismo.
+- **Motor comercial.** Cuando trabajo con Unity —un motor comercial con muchísima documentación—, pido a la IA lo que necesito según lo que quiero conseguir. La IA me señala las herramientas y los enfoques que necesito y con los que trabajar más rápido; acto seguido reviso la documentación del motor para comprender mejor lo que estoy haciendo y conocer las posibilidades y opciones de esas herramientas. Así acelero la búsqueda sin dejar de entender cada decisión.
+
+---
+
 ## Estado y posibles mejoras
 
 **Hecho**
@@ -170,11 +170,18 @@ Todos los scripts viven en `Assets/Scripts/` (namespace `LighthouseEscape`).
 - Menú principal, intro cinemática y nivel completo (sala principal, pasillo, sala 2).
 - Caja fuerte con candado numérico y llave; placas de peso con panel y puertas.
 - Puzzle de luz reorganizado (emisor, espejos, receptores, compuerta) con sonidos.
-- Final de avaricia: trigger tras la salida del faro → pantalla `Completado` con Repetir/Volver al menú.
 - Sonidos cableados en inspector, lluvia y música en bucle.
 - Build final para Windows
+- Partículas para el puzzle de los haces y para la lluvia.
 
 **Pendiente**
 
 - Me habría gustado que el juego fuese más intuitivo a la hora de solventar los puzzles pero no ha habido tiempo a generar assets que ayuden a esto.
 - Mejoraría bastante la experiencia el que todos los elementos del juego tuviesen su propio modelo 3D, pero los que he podido encontrar o no tenían la licencia adecuada que permitiera su uso o rompían por completo la estética del mismo, por lo que al final he preferido dejar mis modelos (que son simples) y formas básicas de Unity.
+
+
+---
+
+## Sobre los assets de terceros
+
+Todos los assets de terceros utilizados en el proyecto son de licencia CC0.
